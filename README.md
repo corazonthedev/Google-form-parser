@@ -4,6 +4,8 @@
 
 This is a python code for parsing Google forms into JSON files.
 
+This parser is not a finished project, there may be unseen bugs or errors. You can contribute as you like.
+
 # Requirements
 - [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/)
   
@@ -38,6 +40,8 @@ This is a python code for parsing Google forms into JSON files.
 
 Parser will automatically parse the form 
 ![2](https://github.com/corazonthedev/Google-form-parser/assets/137296314/1bdea6a0-bac0-47f8-a6d4-eb56b3144e14)
+
+
 and exit
 ![3](https://github.com/corazonthedev/Google-form-parser/assets/137296314/803536f8-3bde-46c7-9bc2-9eb5f342bd64)
 
@@ -60,8 +64,40 @@ For more you can always check the latest.log which will be created after your fi
 
   **Note**: There is a loop in parser in order to parse multiple forms at once but after a couple of forms it`s bugging and not parsing, it will be fixed in future.
 
+# How does it work 
+
+At first page there are 2 types of forms
+
+1. No question, Only description
+
+
+![10](https://github.com/corazonthedev/Google-form-parser/assets/137296314/caff2b87-4264-475e-87c3-d29616f997b3)
+
+2. Questions with description
+
+
+![11](https://github.com/corazonthedev/Google-form-parser/assets/137296314/9e4e752f-2501-432a-af58-57ff75dbd712)
+
+If there are no visible questions on first page, parser will just parse the description and next.
+
+Otherwise parser will try to fill every question and parse it. 
+
+**Note**: Parser will try to fill every question because it will also parse the Answer Verifications. 
+![12](https://github.com/corazonthedev/Google-form-parser/assets/137296314/5f26dd3a-4451-43b9-a4ab-1f57ee4e3549)
+
+When parser finishes filling out questions on current page, it will next and loop untill the last page. 
+
+**Note**: Currently some forms are unparsable because of Google form's html-js structure. **If your form is unparsable it will say UNPRASABLE on latest.log**.
+
+# Visualisation
+For visualisation in __line 81__ set headless=False, so you can see the parsing process. 
+![9](https://github.com/corazonthedev/Google-form-parser/assets/137296314/4ff49529-5928-4609-a1ad-d3b926dfabae)
+
+Clicking anywhere on browser while running with headless=False may occure problems.
+
 ## How to read JSON
-  
+
+
 ## Disclaimer:
 
 ### Why do I have to log-in ?
@@ -73,14 +109,6 @@ Although it only works with your manuel input I **highly recommend not to use yo
 
 I tried different ways to access Google forms but wihout logging-in you can't view all form pages. If you do have an idea you can contribute to this parser.
 
-# How does it work 
-
-
-# Visualisation
-For visualisation set headless=False, so you can see the parsing process. 
--img-
-
-Clicking anywhere on browser while running with headless=False may occure problems.
 
 
 
