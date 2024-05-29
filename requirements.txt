@@ -1,0 +1,2 @@
+beautifulsoup4==4.12.3
+seleniumbase==4.25.4
