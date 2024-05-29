@@ -73,7 +73,7 @@ Although it only works with your manuel input I **highly recommend not to use yo
 
 I tried different ways to access Google forms but wihout logging-in you can't view all form pages. If you do have an idea you can contribute to this parser.
 
-# How does it work ?
+# How does it work 
 
 
 # Visualisation
