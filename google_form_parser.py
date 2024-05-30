@@ -82,7 +82,7 @@ class TestParser(BaseCase):
                 TestParser.parser(sb)
                 print("parse finished")
                 sys.exit()
-        else: print("invalid link/email/password")
+        else: pass
         
     def parser(self): 
         global page_no,url_no, user_email, user_password, user_link
