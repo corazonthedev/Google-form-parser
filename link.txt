@@ -1,0 +1,3 @@
+# Paste one Google Form URL per line.
+# The desktop app can also accept multiple URLs directly.
+https://docs.google.com/forms/d/e/example/viewform

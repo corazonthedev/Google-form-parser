@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "google-form-parser"
+version = "2.0.1"
+description = "Google Form to JSON parser with improved desktop UX and testable parsing core"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "beautifulsoup4==4.12.3",
+]
+
+[project.optional-dependencies]
+live = [
+  "seleniumbase==4.25.4",
+]
+dev = [
+  "pytest==8.0.0",
+  "pytest-cov==4.1.0",
+  "ruff==0.3.0",
+  "black==24.1.1",
+  "pre-commit==3.6.0",
+]
+
+[project.scripts]
+google-form-parser = "google_form_parser.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=src --cov-report=term-missing --cov-fail-under=85"
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B"]
+
+[tool.black]
+line-length = 100
+
+[tool.coverage.run]
+omit = [
+  "src/google_form_parser/app.py",
+  "src/google_form_parser/live_runner.py",
+]
