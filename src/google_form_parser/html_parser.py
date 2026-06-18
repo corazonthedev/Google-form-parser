@@ -194,12 +194,17 @@ class GoogleFormHTMLParser:
             for node in block.select("div.ssX1Bd.KZt9Tc div.V4d7Ke.OIC90c")
             if self._clean(node.get_text(" ", strip=True))
         ]
+        deduplicated_columns = (
+            columns[: len(columns) // 2]
+            if columns[len(columns) // 2 :] == columns[: len(columns) // 2]
+            else columns
+        )
         rows = [
             self._clean(node.get_text(" ", strip=True))
             for node in block.select("div.lLfZXe.fnxRtf.EzyPc")
             if self._clean(node.get_text(" ", strip=True))
         ]
-        return rows, columns
+        return rows, deduplicated_columns
 
     def _helper_text(self, block: Tag) -> str | None:
         candidates = [
