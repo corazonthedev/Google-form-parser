@@ -36,11 +36,11 @@ QuestionType = Literal[
     "time",
     "file_upload",
     "linear_scale",
+    "single_choice_grid",
     "multiple_choice_grid",
-    "checkbox_grid",
     "dropdown",
+    "single_choice",
     "multiple_choice",
-    "checkbox",
     "short_text",
     "unknown",
 ]

@@ -105,9 +105,9 @@ class GoogleFormHTMLParser:
         match question_type:
             case "short_text" | "email" | "url" | "date" | "date" | "time" | "paragraph":
                 question.validation = self._extract_validation(block)
-            case "multiple_choice" | "checkbox" | "dropdown" | "linear_scale":
+            case "single_choice" | "multiple_choice" | "dropdown" | "linear_scale":
                 question.options = self._extract_options(block, question_type)
-            case "multiple_choice_grid" | "checkbox_grid":
+            case "single_choice_grid" | "multiple_choice_grid":
                 question.rows, question.columns = self._extract_grid(block)
 
         return question
@@ -129,14 +129,14 @@ class GoogleFormHTMLParser:
             return "linear_scale"
         if block.select_one("div.gTGYUd"):
             if block.select_one("div.gTGYUd div[role='radiogroup']"):
-                return "multiple_choice_grid"
-            return "checkbox_grid"
+                return "single_choice_grid"
+            return "multiple_choice_grid"
         if block.select_one("div[role='listbox']"):
             return "dropdown"
         if block.select_one("div[jscontroller='UmOCme']"):
-            return "multiple_choice"
+            return "single_choice"
         if block.select_one("div[jscontroller='sW52Ae']"):
-            return "checkbox"
+            return "multiple_choice"
         if block.select_one("input[type='text']"):
             return "short_text"
         return "unknown"
