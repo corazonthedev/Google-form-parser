@@ -5,7 +5,7 @@ from collections.abc import Iterable
 
 from bs4 import BeautifulSoup, Tag
 
-from .models import FormDocument, FormPage, Question, ValidationRule
+from .models import FormDocument, FormPage, Question, QuestionType, ValidationRule
 from .rich_text import extract_rich_text_from_tag
 
 _DESCRIPTION_SELECTORS = [
@@ -110,7 +110,7 @@ class GoogleFormHTMLParser:
             question.rows, question.columns = self._extract_grid(block)
         return question
 
-    def _detect_type(self, block: Tag) -> str:
+    def _detect_type(self, block: Tag) -> QuestionType:
         if block.select_one("input[type='email']"):
             return "email"
         if block.select_one("input[type='url']"):
