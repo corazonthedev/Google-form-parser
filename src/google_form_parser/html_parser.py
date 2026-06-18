@@ -102,12 +102,14 @@ class GoogleFormHTMLParser:
             description=description,
         )
 
-        if question_type in {"short_text", "email", "url", "date", "time", "paragraph"}:
-            question.validation = self._extract_validation(block)
-        elif question_type in {"multiple_choice", "checkbox", "dropdown", "linear_scale"}:
-            question.options = self._extract_options(block, question_type)
-        elif question_type in {"multiple_choice_grid", "checkbox_grid"}:
-            question.rows, question.columns = self._extract_grid(block)
+        match question_type:
+            case "short_text" | "email" | "url" | "date" | "date" | "time" | "paragraph":
+                question.validation = self._extract_validation(block)
+            case "multiple_choice" | "checkbox" | "dropdown" | "linear_scale":
+                question.options = self._extract_options(block, question_type)
+            case "multiple_choice_grid" | "checkbox_grid":
+                question.rows, question.columns = self._extract_grid(block)
+
         return question
 
     def _detect_type(self, block: Tag) -> QuestionType:
