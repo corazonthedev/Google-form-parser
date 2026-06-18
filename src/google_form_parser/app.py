@@ -53,8 +53,8 @@ class GoogleFormParserApp:
         ttk.Label(
             header,
             text=(
-                "Original desktop flow korunuyor; güvenlik, yapı ve okunabilirlik "
-                "geliştirildi."
+                "Original desktop flow preserved; security, structure, and readability "
+                "improved."
             ),
         ).grid(row=1, column=0, sticky="w", pady=(4, 0))
 
@@ -64,9 +64,9 @@ class GoogleFormParserApp:
         ttk.Label(
             summary,
             text=(
-                "• Live parse: URL açılır, HTML okunur, JSON yazılır.\n"
-                "• Saved HTML: page1.html, page2.html gibi dosyalardan da parse eder.\n"
-                "• Şifre kaydedilmez; sadece bu oturum için bellekte tutulur."
+                "\u2022 Live parse: opens URL, reads HTML, writes JSON.\n"
+                "\u2022 Saved HTML: parses page1.html, page2.html etc.\n"
+                "\u2022 Password is not saved; kept in memory for this session only."
             ),
             justify="left",
         ).grid(row=0, column=0, sticky="w")
@@ -99,9 +99,15 @@ class GoogleFormParserApp:
     def _build_live_tab(self, tab: ttk.Frame) -> None:
         tab.columnconfigure(1, weight=1)
         ttk.Label(tab, text="Form URLs (one per line)").grid(row=0, column=0, sticky="w")
-        urls = tk.Text(tab, height=8, wrap="word")
-        urls.grid(row=1, column=0, columnspan=3, sticky="nsew", pady=(6, 12))
+        # Wrap tk.Text in a Frame for cross-platform rendering (macOS fix)
+        url_frame = ttk.Frame(tab, borderwidth=1, relief="sunken")
+        url_frame.grid(row=1, column=0, columnspan=3, sticky="nsew", pady=(6, 12))
+        url_frame.rowconfigure(0, weight=1)
+        url_frame.columnconfigure(0, weight=1)
         tab.rowconfigure(1, weight=1)
+
+        urls = tk.Text(url_frame, height=8, wrap="word", width=60)
+        urls.grid(row=0, column=0, sticky="nsew")
 
         def sync_urls(*_: object) -> None:
             self.urls_var.set(urls.get("1.0", "end").strip())
@@ -112,7 +118,7 @@ class GoogleFormParserApp:
         ttk.Entry(tab, textvariable=self.email_var).grid(row=2, column=1, sticky="ew", padx=(10, 0))
 
         ttk.Label(tab, text="Password (optional)").grid(row=3, column=0, sticky="w", pady=(10, 0))
-        ttk.Entry(tab, textvariable=self.password_var, show="•").grid(
+        ttk.Entry(tab, textvariable=self.password_var, show="\u2022").grid(
             row=3,
             column=1,
             sticky="ew",
