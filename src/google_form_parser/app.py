@@ -101,7 +101,8 @@ class GoogleFormParserApp:
         ttk.Label(tab, text="Form URLs (one per line)").grid(row=0, column=0, sticky="w")
         urls = tk.Text(tab, height=8, wrap="word")
         urls.grid(row=1, column=0, columnspan=3, sticky="nsew", pady=(6, 12))
-        tab.rowconfigure(1, weight=1)
+        tab.rowconfigure(1, weight=1, minsize=40)
+        ttk.Sizegrip(tab).grid(row=1, column=2, sticky="se")
 
         def sync_urls(*_: object) -> None:
             self.urls_var.set(urls.get("1.0", "end").strip())
