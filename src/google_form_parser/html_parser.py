@@ -203,10 +203,13 @@ class GoogleFormHTMLParser:
         )
         rows = [
             self._clean(node.get_text(" ", strip=True))
-            for node in block.select("div.lLfZXe.fnxRtf.EzyPc")
+            for node in block.select("div.V4d7Ke.wzWPxe.OIC90c")
             if self._clean(node.get_text(" ", strip=True))
         ]
-        return rows, deduplicated_columns
+        deduplicated_rows = (
+            rows[: len(rows) // 2] if rows[len(rows) // 2 :] == rows[: len(rows) // 2] else columns
+        )
+        return deduplicated_rows, deduplicated_columns
 
     def _helper_text(self, block: Tag) -> str | None:
         candidates = [
