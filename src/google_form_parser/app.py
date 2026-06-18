@@ -53,8 +53,8 @@ class GoogleFormParserApp:
         ttk.Label(
             header,
             text=(
-                "Original desktop flow korunuyor; güvenlik, yapı ve okunabilirlik "
-                "geliştirildi."
+                "The original desktop layout is preserved; security, structure, and "
+                "readability have been improved."
             ),
         ).grid(row=1, column=0, sticky="w", pady=(4, 0))
 
@@ -64,9 +64,9 @@ class GoogleFormParserApp:
         ttk.Label(
             summary,
             text=(
-                "• Live parse: URL açılır, HTML okunur, JSON yazılır.\n"
-                "• Saved HTML: page1.html, page2.html gibi dosyalardan da parse eder.\n"
-                "• Şifre kaydedilmez; sadece bu oturum için bellekte tutulur."
+                "• Live parse: The URL is opened, the HTML is parsed, and JSON is written.\n"
+                "• Saved HTML: parses files such as saved HTML files (e.g., page1.html, page2.html).\n"
+                "• The password is not saved; it is only stored in memory for this session."
             ),
             justify="left",
         ).grid(row=0, column=0, sticky="w")
