@@ -160,24 +160,24 @@ class GoogleFormHTMLParser:
             rules.append(ValidationRule(rule="helper_text", message=helper_text))
         return rules
 
-    def _extract_options(self, block: Tag, question_type: str) -> list[str]:
-        selectors = {
-            "multiple_choice": [
+    def _extract_options(self, block: Tag, question_type: QuestionType) -> list[str]:
+        selectors: dict[QuestionType, tuple[str, ...]] = {
+            "single_choice": (
                 "div[jscontroller='UmOCme'] span.aDTYNe.snByac.OvPDhc.OIC90c",
                 "div[jscontroller='UmOCme'] label span",
-            ],
-            "checkbox": [
+            ),
+            "multiple_choice": (
                 "div[jscontroller='sW52Ae'] span.aDTYNe.snByac.n5vBHf.OIC90c",
                 "div[jscontroller='sW52Ae'] label span",
-            ],
-            "dropdown": [
+            ),
+            "dropdown": (
                 "div[role='listbox'] span.vRMGwf.oJeWuf",
                 "div[role='option'] span",
-            ],
-            "linear_scale": [
+            ),
+            "linear_scale": (
                 "div[jscontroller='FYWcYb'] div.Zki2Ve",
                 "div[jscontroller='FYWcYb'] label",
-            ],
+            ),
         }
 
         values: list[str] = []
