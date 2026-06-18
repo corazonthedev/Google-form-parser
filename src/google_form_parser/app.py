@@ -64,9 +64,9 @@ class GoogleFormParserApp:
         ttk.Label(
             summary,
             text=(
-                "• Live parse: The URL is opened, the HTML is parsed, and JSON is written.\n"
-                "• Saved HTML: parses files such as saved HTML files (e.g., page1.html, page2.html).\n"
-                "• The password is not saved; it is only stored in memory for this session."
+                "\u2022 Live parse: The URL is opened, the HTML is parsed, and JSON is written.\n"
+                "\u2022 Saved HTML: parses files such as saved HTML files (e.g., page1.html, page2.html).\n"
+                "\u2022 The password is not saved; it is only stored in memory for this session."
             ),
             justify="left",
         ).grid(row=0, column=0, sticky="w")
@@ -113,7 +113,7 @@ class GoogleFormParserApp:
         ttk.Entry(tab, textvariable=self.email_var).grid(row=2, column=1, sticky="ew", padx=(10, 0))
 
         ttk.Label(tab, text="Password (optional)").grid(row=3, column=0, sticky="w", pady=(10, 0))
-        ttk.Entry(tab, textvariable=self.password_var, show="•").grid(
+        ttk.Entry(tab, textvariable=self.password_var, show="\u2022").grid(
             row=3,
             column=1,
             sticky="ew",
