@@ -33,9 +33,9 @@ def test_parse_second_page_extracts_section_title_and_choice_options() -> None:
 
     page = document.pages[0]
     assert page.section_title == "Preferences"
-    assert page.questions[0].question_type == "multiple_choice"
+    assert page.questions[0].question_type == "single_choice"
     assert page.questions[0].options == ["Starter", "Growth", "Enterprise"]
-    assert page.questions[1].question_type == "checkbox"
+    assert page.questions[1].question_type == "multiple_choice"
     assert page.questions[1].options == ["Monday", "Wednesday"]
 
 
@@ -50,7 +50,7 @@ def test_parse_advanced_question_types() -> None:
     assert questions["Launch date"].question_type == "date"
     assert questions["Priority"].options == ["Low", "High"]
     assert questions["Satisfaction"].options == ["1", "2", "3"]
-    assert questions["Department ratings"].question_type == "multiple_choice_grid"
+    assert questions["Department ratings"].question_type == "single_choice_grid"
     assert questions["Department ratings"].rows == ["Support", "Sales"]
     assert questions["Department ratings"].columns == ["Bad", "Good"]
     assert questions["Attachment"].question_type == "file_upload"

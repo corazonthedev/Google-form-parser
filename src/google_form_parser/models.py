@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
-from typing import Any
+from typing import Any, Literal
 
 
 @dataclass(slots=True)
@@ -28,10 +28,28 @@ class ValidationRule:
         return data
 
 
+QuestionType = Literal[
+    "email",
+    "url",
+    "date",
+    "paragraph",
+    "time",
+    "file_upload",
+    "linear_scale",
+    "single_choice_grid",
+    "multiple_choice_grid",
+    "dropdown",
+    "single_choice",
+    "multiple_choice",
+    "short_text",
+    "unknown",
+]
+
+
 @dataclass(slots=True)
 class Question:
     title: str
-    question_type: str
+    question_type: QuestionType
     required: bool = False
     description: list[RichTextLine] = field(default_factory=list)
     options: list[str] = field(default_factory=list)

@@ -5,7 +5,7 @@ from collections.abc import Iterable
 
 from bs4 import BeautifulSoup, Tag
 
-from .models import FormDocument, FormPage, Question, ValidationRule
+from .models import FormDocument, FormPage, Question, QuestionType, ValidationRule
 from .rich_text import extract_rich_text_from_tag
 
 _DESCRIPTION_SELECTORS = [
@@ -102,15 +102,17 @@ class GoogleFormHTMLParser:
             description=description,
         )
 
-        if question_type in {"short_text", "email", "url", "date", "time", "paragraph"}:
-            question.validation = self._extract_validation(block)
-        elif question_type in {"multiple_choice", "checkbox", "dropdown", "linear_scale"}:
-            question.options = self._extract_options(block, question_type)
-        elif question_type in {"multiple_choice_grid", "checkbox_grid"}:
-            question.rows, question.columns = self._extract_grid(block)
+        match question_type:
+            case "short_text" | "email" | "url" | "date" | "date" | "time" | "paragraph":
+                question.validation = self._extract_validation(block)
+            case "single_choice" | "multiple_choice" | "dropdown" | "linear_scale":
+                question.options = self._extract_options(block, question_type)
+            case "single_choice_grid" | "multiple_choice_grid":
+                question.rows, question.columns = self._extract_grid(block)
+
         return question
 
-    def _detect_type(self, block: Tag) -> str:
+    def _detect_type(self, block: Tag) -> QuestionType:
         if block.select_one("input[type='email']"):
             return "email"
         if block.select_one("input[type='url']"):
@@ -127,14 +129,14 @@ class GoogleFormHTMLParser:
             return "linear_scale"
         if block.select_one("div.gTGYUd"):
             if block.select_one("div.gTGYUd div[role='radiogroup']"):
-                return "multiple_choice_grid"
-            return "checkbox_grid"
+                return "single_choice_grid"
+            return "multiple_choice_grid"
         if block.select_one("div[role='listbox']"):
             return "dropdown"
         if block.select_one("div[jscontroller='UmOCme']"):
-            return "multiple_choice"
+            return "single_choice"
         if block.select_one("div[jscontroller='sW52Ae']"):
-            return "checkbox"
+            return "multiple_choice"
         if block.select_one("input[type='text']"):
             return "short_text"
         return "unknown"
@@ -158,24 +160,24 @@ class GoogleFormHTMLParser:
             rules.append(ValidationRule(rule="helper_text", message=helper_text))
         return rules
 
-    def _extract_options(self, block: Tag, question_type: str) -> list[str]:
-        selectors = {
-            "multiple_choice": [
+    def _extract_options(self, block: Tag, question_type: QuestionType) -> list[str]:
+        selectors: dict[QuestionType, tuple[str, ...]] = {
+            "single_choice": (
                 "div[jscontroller='UmOCme'] span.aDTYNe.snByac.OvPDhc.OIC90c",
                 "div[jscontroller='UmOCme'] label span",
-            ],
-            "checkbox": [
+            ),
+            "multiple_choice": (
                 "div[jscontroller='sW52Ae'] span.aDTYNe.snByac.n5vBHf.OIC90c",
                 "div[jscontroller='sW52Ae'] label span",
-            ],
-            "dropdown": [
+            ),
+            "dropdown": (
                 "div[role='listbox'] span.vRMGwf.oJeWuf",
                 "div[role='option'] span",
-            ],
-            "linear_scale": [
+            ),
+            "linear_scale": (
                 "div[jscontroller='FYWcYb'] div.Zki2Ve",
                 "div[jscontroller='FYWcYb'] label",
-            ],
+            ),
         }
 
         values: list[str] = []
@@ -194,12 +196,20 @@ class GoogleFormHTMLParser:
             for node in block.select("div.ssX1Bd.KZt9Tc div.V4d7Ke.OIC90c")
             if self._clean(node.get_text(" ", strip=True))
         ]
+        deduplicated_columns = (
+            columns[: len(columns) // 2]
+            if columns[len(columns) // 2 :] == columns[: len(columns) // 2]
+            else columns
+        )
         rows = [
             self._clean(node.get_text(" ", strip=True))
-            for node in block.select("div.lLfZXe.fnxRtf.EzyPc")
+            for node in block.select("div.V4d7Ke.wzWPxe.OIC90c")
             if self._clean(node.get_text(" ", strip=True))
         ]
-        return rows, columns
+        deduplicated_rows = (
+            rows[: len(rows) // 2] if rows[len(rows) // 2 :] == rows[: len(rows) // 2] else columns
+        )
+        return deduplicated_rows, deduplicated_columns
 
     def _helper_text(self, block: Tag) -> str | None:
         candidates = [
