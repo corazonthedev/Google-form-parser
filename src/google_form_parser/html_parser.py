@@ -191,25 +191,28 @@ class GoogleFormHTMLParser:
         return list(dict.fromkeys(values))
 
     def _extract_grid(self, block: Tag) -> tuple[list[str], list[str]]:
+        # Columns: inside the dedicated column header container
         columns = [
             self._clean(node.get_text(" ", strip=True))
             for node in block.select("div.ssX1Bd.KZt9Tc div.V4d7Ke.OIC90c")
             if self._clean(node.get_text(" ", strip=True))
         ]
-        deduplicated_columns = (
-            columns[: len(columns) // 2]
-            if columns[len(columns) // 2 :] == columns[: len(columns) // 2]
-            else columns
-        )
+        # Some Google Form layouts duplicate the column header row; deduplicate
+        # while preserving order.
+        columns = list(dict.fromkeys(columns))
+
+        # Rows: try the newer layout first, fall back to older class patterns.
         rows = [
             self._clean(node.get_text(" ", strip=True))
-            for node in block.select("div.V4d7Ke.wzWPxe.OIC90c")
+            for node in block.select(
+                "div.lLfZXe.fnxRtf.EzyPc, "  # newer layout
+                "div.V4d7Ke.wzWPxe.OIC90c"    # older layout
+            )
             if self._clean(node.get_text(" ", strip=True))
         ]
-        deduplicated_rows = (
-            rows[: len(rows) // 2] if rows[len(rows) // 2 :] == rows[: len(rows) // 2] else columns
-        )
-        return deduplicated_rows, deduplicated_columns
+        rows = list(dict.fromkeys(rows))
+
+        return rows, columns
 
     def _helper_text(self, block: Tag) -> str | None:
         candidates = [
